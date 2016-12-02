@@ -33,5 +33,36 @@ def part_a():
 
     print "The bathroom code is {}.".format(code)
 
+def part_b():
+    code = ''
+    codes = [0,   0,   1,   0, 0,
+             0,   2,   3,   4, 0,
+             5,   6,   7,   8, 9,
+             0, 'A', 'B', 'C', 0,
+             0,   0, 'D',   0, 0]
+    row_len = 5
+    num_rows = len(codes) / row_len
+    i = 10 # position of 5
+
+    def valid(p):
+        return p >= 0 and p < len(codes) and codes[p] != 0
+
+    for line in PUZZLE_INPUT:
+        for instruction in line:
+            if instruction == 'L' and valid(i - 1):
+                i -= 1
+            elif instruction == 'R' and valid(i + 1):
+                i += 1
+            elif instruction == 'U' and valid(i - row_len):
+                i -= row_len
+            elif instruction == 'D' and valid(i + row_len):
+                i += row_len
+
+        print "Ended up at {}.".format(i)
+        code = code + str(codes[i])
+
+    print "The bathroom code is {}.".format(code)
+
 if __name__ == '__main__':
     part_a()
+    part_b()
