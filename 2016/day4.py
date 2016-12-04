@@ -34,10 +34,8 @@ def calculate_sector_id(room):
             break
 
     if real_room:
-        print room, "was a real room."
         return int(sector_id)
     else:
-        print room, "was NOT a real room."
         return 0
 
 def cmp_items(a, b):
@@ -58,7 +56,24 @@ def part_one():
     print "The sum of the sector IDs of the real rooms is {}.".format(sector_id_sum)
 
 def part_two():
-    pass
+    valid_rooms = [line.strip() for line in PUZZLE_INPUT if calculate_sector_id(line.strip()) > 0]
+
+    for room in valid_rooms:
+        encrypted_name = room[:-11]
+        sector_id = int(room[-10:-7])
+        unencrypted = ''
+        for letter in encrypted_name:
+            unencrypted += shift_letter(letter, sector_id)
+
+        print sector_id, unencrypted
+
+def shift_letter(letter, shift):
+    if letter == '-':
+        return ' '
+
+    code = ord(letter) - ord('a')
+    shifted_letter = (code + shift) % 26
+    return chr(shifted_letter + ord('a'))
 
 if __name__ == '__main__':
     assert calculate_sector_id("aaaaa-bbb-z-y-x-123[abxyz]") > 0
