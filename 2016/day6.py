@@ -9,7 +9,10 @@ with open('day6_input') as f:
 def highest_frequency(occurrences_dict):
     return sorted(occurrences_dict.items(), key=operator.itemgetter(1), reverse=True)[0][0]
 
-def part_one():
+def lowest_frequency(occurrences_dict):
+    return sorted(occurrences_dict.items(), key=operator.itemgetter(1), reverse=False)[0][0]
+
+def decode_message(letter_getter):
     occurrences = [{}, {}, {}, {}, {}, {}, {}, {}]
 
     for line in PUZZLE_INPUT:
@@ -20,13 +23,16 @@ def part_one():
 
             occs[char] += 1
 
-    letters = [highest_frequency(occs) for occs in occurrences]
+    letters = [letter_getter(occs) for occs in occurrences]
 
     print "The hidden message is '{}'.".format(''.join(letters))
 
 
+def part_one():
+    decode_message(highest_frequency)
+
 def part_two():
-    pass
+    decode_message(lowest_frequency)
 
 if __name__ == '__main__':
     part_one()
