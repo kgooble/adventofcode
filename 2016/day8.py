@@ -27,7 +27,7 @@ def rotate_column(display, column_index, shift):
 
 def show(display):
     for row in display:
-        print ''.join([str(c) for c in row])
+        print ''.join(['.' if c == 1 else ' ' for c in row])
 
 WIDTH = 50
 HEIGHT = 6
@@ -44,8 +44,8 @@ def part_one():
 
             turn_on_rectangle(display, width, height)
 
-            #print 'executed instruction: ', instruction
-            #show(display)
+            print 'executed instruction: ', instruction
+            show(display)
             continue
 
         shift_position = int(instruction_parts[2].split('=')[1])
@@ -56,13 +56,14 @@ def part_one():
         else:
             rotate_column(display, shift_position, shift_amount)
 
-        #print 'executed instruction: ', instruction
-        #show(display)
+        print 'executed instruction: ', instruction
+        show(display)
 
     num_pixels = sum(sum(row) for row in display)
     print "{} pixels should be lit.".format(num_pixels)
 
 def part_two():
+    # Just look at print of part one
     pass
 
 if __name__ == '__main__':
