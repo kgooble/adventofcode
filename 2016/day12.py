@@ -48,6 +48,7 @@ def part_one():
     print "The value left in register a is {}.".format(registers['a'])
 
 def part_two():
+    # See day one - put 1 in c register.
     pass
 
 if __name__ == '__main__':
