@@ -55,7 +55,11 @@ class State:
         return self.elevator_posn == len(self.floors) - 1
 
     def on_ground_floor(self):
-        return self.elevator_posn == 0
+        return self.elevator_posn == 0 or \
+               len(self.floors[0]) == 0 and (
+                       self.elevator_posn == 1 or 
+                       (self.elevator_posn == 2 and len(self.floors[1]) == 0)
+                    )
 
     def next_state(self, elevator_content, movement):
         new_elevator_position = self.elevator_posn + movement
@@ -105,6 +109,24 @@ class State:
     def is_terminal(self):
         return all(len(floor) == 0 for floor in self.floors[:-1])
 
+    def pairs(self):
+        res = set()
+
+        microchips = {}
+        generators = {}
+
+        for index, floor in enumerate(self.floors):
+            for thing in floor:
+                if isinstance(thing, Microchip):
+                    microchips[thing.name] = index
+                else:
+                    generators[thing.name] = index
+
+        for name in microchips:
+            res.add((generators[name], microchips[name]))
+
+        return res
+
     def __repr__(self):
         floor_reprs = ['Num Moves: ' + str(self.num_moves)]
 
@@ -121,10 +143,10 @@ class State:
         return '\n'.join(floor_reprs)
 
     def __eq__(self, other):
-        return self.elevator_posn == other.elevator_posn and self.floors == other.floors
+        return self.elevator_posn == other.elevator_posn and self.pairs() == other.pairs()
 
     def __hash__(self):
-        return self.elevator_posn + sum(len(floor) * 10 * (index + 1) for index, floor in enumerate(self.floors))
+        return self.elevator_posn + sum(len(floor) * pow(10, index + 1) for index, floor in enumerate(self.floors))
 
 THULIUM = 'thulium'
 PLUTONIUM = 'plutonium'
@@ -156,7 +178,10 @@ def part_one():
         set([])
     ]
     floors = [
-        set([ Generator(THULIUM), Microchip(THULIUM), Generator(PLUTONIUM), Generator(STRONTIUM) ]),
+        set([
+            Generator(THULIUM), Microchip(THULIUM), Generator(PLUTONIUM), Generator(STRONTIUM),
+            Generator('elerium'), Microchip('elerium'), Generator('dilithium'), Microchip('dilithium')
+            ]),
         set([ Microchip(PLUTONIUM), Microchip(STRONTIUM) ]),
         set([ Generator(PROMETHIUM), Microchip(PROMETHIUM), Generator(RUTHENIUM), Microchip(RUTHENIUM) ]),
         set([])
