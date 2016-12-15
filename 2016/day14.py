@@ -2,7 +2,7 @@
 
 import hashlib
 
-PUZZLE_INPUT = 'abc'
+PUZZLE_INPUT = 'cuanljph'
 
 def check_for_threes(h):
     char = h[0]
@@ -15,6 +15,9 @@ def check_for_threes(h):
         else:
             char = c
             count = 1
+
+    if count == 3:
+        return char
 
     return None
 
@@ -34,30 +37,40 @@ def check_for_fives(h):
 
     return fives
 
+def get_hash(index):
+    m = hashlib.md5()
+    m.update(PUZZLE_INPUT + str(index))
+    h = m.hexdigest()
+    for i in range(0, 2016):
+        m = hashlib.md5()
+        m.update(h)
+        h = m.hexdigest()
+
+    return h
+
 def part_one():
     index = 0
     potentials = []
     keys = []
 
     while True:
-        m = hashlib.md5()
-        m.update(PUZZLE_INPUT + str(index))
-        hex_code = m.hexdigest()
+        print "index", index
+        hex_code = get_hash(index)
 
         five_in_a_rows = check_for_fives(hex_code)
 
         if len(five_in_a_rows) > 0:
-
             # Filter out the ones that were found over 1000 ago
             potentials = [p for p in potentials if p[1] + 1000 > index]
 
-            found_key = False
+            found = []
             for p in potentials:
                 if p[0] in five_in_a_rows:
                     keys.append(p)
-                    found_key = True
+                    found.append(p)
 
-            if found_key:
+            if len(found) > 0:
+                potentials = [p for p in potentials if p not in found]
                 keys.sort(key=lambda k: k[1])
 
         three_in_a_row = check_for_threes(hex_code)
