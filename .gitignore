@@ -1,1 +1,4 @@
 *.pyc
+2017/AdventOfCode2017/bin
+2017/AdventOfCode2017/obj
+2017/.vs
